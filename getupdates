@@ -31,6 +31,9 @@ function getupdates() {
 action=$1
 
 case "$action" in
+    "")
+    echo "ERROR: Usage is getupdates --set-crontab to set the crontab or getupdates --get-updates to manually ron the poll"
+        ;;
     --set-crontab)
         set_crontab
         ;;
