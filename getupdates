@@ -1,0 +1,43 @@
+#!/bin/bash
+
+DIR=/tmp
+OS_type=$(cat /etc/os-release | grep "^ID")
+
+function set_crontab() {
+    case $OS_type in
+        ID=fedora)
+            (crontab -l 2>/dev/null; echo "0 0 * * * dnf check-update | grep -Ec ' *updates' > /tmp/upgrade_count") | crontab -
+            echo "Crontab has been added! check update crontab will run every night at 12.00AM"
+        ;;
+        ID=debian)
+            (crontab -l 2>/dev/null; echo "0 0 * * * apt update && apt list --upgradable | grep -Ec ' upgradable' > /tmp/upgrade_count") | crontab -
+            echo "Crontab has been added! check update crontab will run every night at 12.00AM"        
+        ;;
+        ID=rhel)
+            (crontab -l 2>/dev/null; echo "0 0 * * * dnf check-update | grep -Ec ' *updates' > /tmp/upgrade_count") | crontab -
+            echo "Crontab has been added! check update crontab will run every night at 12.00AM"        
+        ;;
+    esac
+}
+
+function getupdates() {
+    if [ ! -f $DIR ]; then
+        test -f $file/upgrade_count || { echo "Upgrades have not been checked yet" > $file/upgrade_count; ok=0; }
+    fi
+    cd $DIR
+    echo $DIR/upgrade_count
+}
+
+action=$1
+
+case "$action" in
+    --set-crontab)
+        set_crontab
+        ;;
+    --get-updates)
+        getupdates
+        ;;
+    updates.upgrade_count)
+        test -f $DIR/upgrade_count && cat $DIR/upgrade_count
+        ;;
+esac
