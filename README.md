@@ -15,7 +15,7 @@ updates.upgrade_count, this is the key used by the poller and should not be used
 
 Be sure to give the script the right permissions to be run by the zabbix agent (eg. 755 perms).
 
-The key to be used in zabbix is updates.upgrade_count. Put the config in your /etc/zabbix/zabbix_agent2.d/ directory. The script itself, upgrade-count, should be placed in /usr/local/bin/ (Could be changed manually in the config)
+The key to be used in zabbix is updates.upgrade_count. Put the config in your /etc/zabbix/zabbix_agent2.d/ directory. The script itself, getupdates, should be placed in /usr/local/bin/ (Could be changed manually in the config)
 
 ### Usage
 <code>getupdates --set-crontab </code> to automatically set the crontab\
