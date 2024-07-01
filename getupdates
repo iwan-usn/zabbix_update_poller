@@ -1,21 +1,17 @@
 #!/bin/bash
 
 DIR=/tmp/zabbix_updatecount
-RELEASE=${source /etc/os-release; echo $ID}
+source /etc/os-release
 
 function set_crontab() {
     mkdir $DIR
-    case $RELEASE in
-        fedora)
+    case $ID in
+        fedora|rhel)
             (crontab -l 2>/dev/null; echo "0 0 * * * dnf check-update | grep -Ec ' *updates' > $DIR/upgrade_count") | crontab -
             echo "Crontab has been added! check update crontab will run every night at 12.00AM"
         ;;
-        debian)
+        debian|ubuntu)
             (crontab -l 2>/dev/null; echo "0 0 * * * apt update && apt list --upgradable | grep -Ec ' upgradable' > $DIR/upgrade_count") | crontab -
-            echo "Crontab has been added! check update crontab will run every night at 12.00AM"        
-        ;;
-        rhel)
-            (crontab -l 2>/dev/null; echo "0 0 * * * dnf check-update | grep -Ec ' *updates' > $DIR/upgrade_count") | crontab -
             echo "Crontab has been added! check update crontab will run every night at 12.00AM"        
         ;;
     esac
