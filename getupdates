@@ -1,20 +1,20 @@
 #!/bin/bash
 
-DIR=/tmp
-OS_type=$(cat /etc/os-release | grep "^ID")
+DIR=/tmp/zabbix_updatecount
 
 function set_crontab() {
-    case $OS_type in
-        ID=fedora)
-            (crontab -l 2>/dev/null; echo "0 0 * * * dnf check-update | grep -Ec ' *updates' > /tmp/upgrade_count") | crontab -
+    mkdir $DIR
+    case $(source /etc/os-release; echo $ID) in
+        fedora)
+            (crontab -l 2>/dev/null; echo "0 0 * * * dnf check-update | grep -Ec ' *updates' > $DIR/upgrade_count") | crontab -
             echo "Crontab has been added! check update crontab will run every night at 12.00AM"
         ;;
-        ID=debian)
-            (crontab -l 2>/dev/null; echo "0 0 * * * apt update && apt list --upgradable | grep -Ec ' upgradable' > /tmp/upgrade_count") | crontab -
+        debian)
+            (crontab -l 2>/dev/null; echo "0 0 * * * apt update && apt list --upgradable | grep -Ec ' upgradable' > $DIR/upgrade_count") | crontab -
             echo "Crontab has been added! check update crontab will run every night at 12.00AM"        
         ;;
-        ID=rhel)
-            (crontab -l 2>/dev/null; echo "0 0 * * * dnf check-update | grep -Ec ' *updates' > /tmp/upgrade_count") | crontab -
+        rhel)
+            (crontab -l 2>/dev/null; echo "0 0 * * * dnf check-update | grep -Ec ' *updates' > $DIR/upgrade_count") | crontab -
             echo "Crontab has been added! check update crontab will run every night at 12.00AM"        
         ;;
     esac
@@ -31,16 +31,16 @@ function getupdates() {
 action=$1
 
 case "$action" in
-    "")
-    echo "ERROR: Usage is getupdates --set-crontab to set the crontab or getupdates --get-updates to manually ron the poll"
-        ;;
-    --set-crontab)
+    *--set-crontab*)
         set_crontab
         ;;
-    --get-updates)
+    *--get-updates*)
         getupdates
         ;;
-    updates.upgrade_count)
+    *updates.upgrade_count*)
         test -f $DIR/upgrade_count && cat $DIR/upgrade_count
+        ;;
+        *)
+    echo "ERROR: Usage is getupdates --set-crontab to set the crontab or getupdates --get-updates to manually run the poll"
         ;;
 esac

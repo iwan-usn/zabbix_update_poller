@@ -13,7 +13,7 @@ There are three subcommands you can use in this script\
 --get-updates, this tests if the crontab has been run yet and also manually polls the file created by crontab (or creates one if it does not exist).\
 updates.upgrade_count, this is the key used by the poller and should not be used normally.
 
-Be sure to give the script the right permissions to be run by the zabbix agent (eg. 777 perms).
+Be sure to give the script the right permissions to be run by the zabbix agent (eg. 755 perms).
 
 The key to be used in zabbix is updates.upgrade_count. Put the config in your /etc/zabbix/zabbix_agent2.d/ directory. The script itself, upgrade-count, should be placed in /usr/local/bin/ (Could be changed manually in the config)
 
